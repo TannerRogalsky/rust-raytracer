@@ -247,7 +247,7 @@ fn test_find_lights() {
     assert_eq!(find_lights(&world).len(), 1);
 }
 
-pub fn render(filename: &str, scene: Config) {
+pub fn render_to_buffer(scene: Config) -> Vec<u8> {
     let image_width = scene.width;
     let image_height = scene.height;
 
@@ -261,7 +261,13 @@ pub fn render(filename: &str, scene: Config) {
         render_line(band, &scene, &lights, i);
     });
     println!("Frame time: {}ms", start.elapsed().as_millis());
+    pixels
+}
 
+pub fn render(filename: &str, scene: Config) {
+    let image_width = scene.width;
+    let image_height = scene.height;
+    let pixels = render_to_buffer(scene);
     write_image(filename, &pixels, (image_width, image_height)).expect("error writing image");
 }
 
